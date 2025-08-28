@@ -3,7 +3,7 @@ import { HashLoader } from "react-spinners";
 
 const LoadingSpinner = ({
   loading = true,
-  size = 50,
+  size = 80,
   color = "#3B82F6",
   message = "Loading...",
 }) => {
@@ -20,10 +20,10 @@ const LoadingSpinner = ({
           data-testid="loader"
         />
         <p className="text-gray-600 text-lg font-medium">{message}</p>
-        <p className="text-gray-400 text-sm">Server is starting up...</p>
       </div>
     </div>
   );
 };
 
 export default LoadingSpinner;
+
