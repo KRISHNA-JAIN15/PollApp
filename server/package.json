@@ -6,10 +6,10 @@
       "scripts": {
         "start": "node index.js",
         "dev": "nodemon index.js",
-        "build": "prisma generate",
-        "postinstall": "prisma generate",
-        "deploy": "prisma generate && prisma db push && node index.js"
-      },
+        "prisma:generate": "prisma generate",
+        "prisma:migrate": "prisma migrate dev",
+        "prisma:studio": "prisma studio"
+    },
     "dependencies": {
         "express": "^4.18.2",
         "cors": "^2.8.5",
