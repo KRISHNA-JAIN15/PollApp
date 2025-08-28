@@ -3,7 +3,7 @@ import { setContext } from "@apollo/client/link/context";
 
 // Create HTTP link to GraphQL endpoint
 const httpLink = createHttpLink({
-  uri: "http://localhost:3001/graphql",
+  uri: "https://pollapp-ivzl.onrender.com/graphql",
 });
 
 // Create auth link to add JWT token to requests
