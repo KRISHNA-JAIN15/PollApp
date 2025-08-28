@@ -4,6 +4,7 @@ import { gql } from "@apollo/client";
 import { useQuery } from "@apollo/client/react";
 import { useMutation } from "@apollo/client/react";
 import Navbar from "../components/Navbar";
+import LoadingSpinner from "../components/LoadingSpinner";
 import { Trash2, BarChart3, Users, Calendar, Edit3 } from "lucide-react";
 
 const GET_MY_POLLS = gql`
@@ -95,9 +96,7 @@ const MyPolls = () => {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
         <Navbar />
-        <div className="flex items-center justify-center min-h-[60vh]">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-        </div>
+        <LoadingSpinner message="Loading your polls..." />
       </div>
     );
   }
