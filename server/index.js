@@ -48,6 +48,7 @@ async function startServer() {
           "http://localhost:3000",
           "http://localhost:3001",
           "https://poll-app-zeta-seven.vercel.app",
+          "https://pollapp.krishnajain.tech"
         ],
         methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         allowedHeaders: [
