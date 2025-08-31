@@ -1,20 +1,30 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { LogOut, User, Vote, Home, BarChart3 } from "lucide-react";
+import { LogOut, User, Vote, Home, BarChart3, Menu, X } from "lucide-react";
 
 const Navbar = () => {
   const { user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleLogout = async () => {
     await logout();
     navigate("/");
+    setIsMobileMenuOpen(false); // Close mobile menu after logout
   };
 
   const isActive = (path) => {
     return location.pathname === path;
+  };
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
   };
 
   return (
@@ -24,7 +34,7 @@ const Navbar = () => {
           <div className="flex justify-between h-16">
             {/* Logo and Brand */}
             <div className="flex items-center">
-              <Link to="/" className="flex items-center space-x-3">
+              <Link to="/" className="flex items-center space-x-3" onClick={closeMobileMenu}>
                 <div className="p-2 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl shadow-lg">
                   <Vote className="h-6 w-6 text-white" />
                 </div>
@@ -34,20 +44,8 @@ const Navbar = () => {
               </Link>
             </div>
 
-            {/* Navigation Links */}
+            {/* Desktop Navigation Links */}
             <div className="hidden md:flex items-center space-x-2">
-              {/* <Link
-                to="/"
-                className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
-                  isActive("/")
-                    ? "text-blue-600 bg-blue-50 shadow-sm"
-                    : "text-gray-600 hover:text-blue-600 hover:bg-gray-50"
-                }`}
-              >
-                <Home className="h-4 w-4" />
-                <span>Home</span>
-              </Link> */}
-
               {isAuthenticated && (
                 <>
                   <Link
@@ -84,8 +82,8 @@ const Navbar = () => {
               )}
             </div>
 
-            {/* User Menu */}
-            <div className="flex items-center space-x-4">
+            {/* Desktop User Menu */}
+            <div className="hidden md:flex items-center space-x-4">
               {isAuthenticated ? (
                 <div className="flex items-center space-x-3">
                   <div className="flex items-center space-x-3 px-4 py-2 bg-gray-50 rounded-xl">
@@ -122,26 +120,115 @@ const Navbar = () => {
               )}
             </div>
 
-            {/* Mobile menu button */}
-            <div className="md:hidden flex items-center">
-              <button className="p-2 rounded-xl text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors">
-                <svg
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                </svg>
+            {/* Mobile menu button and user info */}
+            <div className="md:hidden flex items-center space-x-3">
+              {/* Mobile user avatar (when authenticated) */}
+              {isAuthenticated && (
+                <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
+                  <User className="h-4 w-4 text-white" />
+                </div>
+              )}
+              
+              <button 
+                onClick={toggleMobileMenu}
+                className="p-2 rounded-xl text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors"
+                aria-label="Toggle mobile menu"
+              >
+                {isMobileMenuOpen ? (
+                  <X className="h-6 w-6" />
+                ) : (
+                  <Menu className="h-6 w-6" />
+                )}
               </button>
             </div>
           </div>
         </div>
+
+        {/* Mobile Menu */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden bg-white border-t border-gray-100 shadow-lg">
+            <div className="px-4 py-4 space-y-2">
+              {isAuthenticated ? (
+                <>
+                  {/* User info in mobile */}
+                  <div className="flex items-center space-x-3 px-4 py-3 bg-gray-50 rounded-xl mb-4">
+                    <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
+                      <User className="h-5 w-5 text-white" />
+                    </div>
+                    <div>
+                      <span className="text-sm font-medium text-gray-700">
+                        {user?.name}
+                      </span>
+                      <p className="text-xs text-gray-500">{user?.email}</p>
+                    </div>
+                  </div>
+
+                  {/* Navigation Links */}
+                  <Link
+                    to="/polls"
+                    onClick={closeMobileMenu}
+                    className={`flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
+                      isActive("/polls")
+                        ? "text-blue-600 bg-blue-50 shadow-sm"
+                        : "text-gray-600 hover:text-blue-600 hover:bg-gray-50"
+                    }`}
+                  >
+                    <Vote className="h-5 w-5" />
+                    <span>Polls</span>
+                  </Link>
+
+                  <Link
+                    to="/my-polls"
+                    onClick={closeMobileMenu}
+                    className={`flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
+                      isActive("/my-polls")
+                        ? "text-blue-600 bg-blue-50 shadow-sm"
+                        : "text-gray-600 hover:text-blue-600 hover:bg-gray-50"
+                    }`}
+                  >
+                    <BarChart3 className="h-5 w-5" />
+                    <span>My Polls</span>
+                  </Link>
+
+                  <Link
+                    to="/create-poll"
+                    onClick={closeMobileMenu}
+                    className="flex items-center justify-center space-x-2 px-4 py-3 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg mt-2"
+                  >
+                    <Vote className="h-4 w-4" />
+                    <span>Create Poll</span>
+                  </Link>
+
+                  {/* Logout button */}
+                  <button
+                    onClick={handleLogout}
+                    className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium text-red-600 hover:bg-red-50 hover:text-red-700 transition-all duration-200 mt-4 border-t border-gray-100 pt-4"
+                  >
+                    <LogOut className="h-5 w-5" />
+                    <span>Logout</span>
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link
+                    to="/login"
+                    onClick={closeMobileMenu}
+                    className="block px-4 py-3 rounded-xl text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200"
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    to="/register"
+                    onClick={closeMobileMenu}
+                    className="block px-4 py-3 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg text-center"
+                  >
+                    Register
+                  </Link>
+                </>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* User verification status */}
         {isAuthenticated && user && !user.isVerified && (
